@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diabetic Assistant Bot</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f7f6; display: flex; justify-content: center; padding: 20px; }
+        #chat-container { width: 400px; background: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); overflow: hidden; }
+        #header { background: #007bff; color: white; padding: 15px; text-align: center; font-weight: bold; }
+        #chat-box { height: 400px; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .msg { padding: 10px; border-radius: 8px; max-width: 80%; font-size: 14px; line-height: 1.4; }
+        .bot { background: #e9ecef; align-self: flex-start; color: #333; }
+        .user { background: #007bff; align-self: flex-end; color: white; }
+        #input-area { display: flex; border-top: 1px solid #ddd; }
+        input { flex: 1; border: none; padding: 15px; outline: none; font-size: 14px; }
+        button { background: #007bff; color: white; border: none; padding: 15px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #0056b3; }
+        .disclaimer { font-size: 11px; color: #d9534f; padding: 8px; text-align: center; background: #fdf0f0; border-bottom: 1px solid #eed3d7; }
+    </style>
+</head>
+<body>
+
+<div id="chat-container">
+    <div id="header">Diabetes Assistant</div>
+    <div class="disclaimer">⚠️ For educational purposes only. Always consult a doctor for medical advice.</div>
+    <div id="chat-box">
+        <div class="msg bot">Hello! I am your Diabetes Assistant. You can ask me things like "What is Type 1?", "What are the symptoms?", or "What should my diet be?"</div>
+    </div>
+    <div id="input-area">
+        <input type="text" id="user-input" placeholder="Ask a question..." onkeypress="handleKeyPress(event)">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script>
+    // This is the brain of your bot! 
+    const knowledgeBase = {
+        "hello": "Hi there! I am your Diabetes Assistant. How can I help you today?",
+        "hi": "Hello! What would you like to know about diabetes?",
+        "what is diabetes": "Diabetes is a chronic condition that affects how your body turns food into energy. When blood sugar goes up, it signals your pancreas to release insulin.",
+        "type 1": "Type 1 Diabetes is an autoimmune condition where the pancreas stops making insulin. People with this type require daily insulin to survive.",
+        "type 2": "Type 2 Diabetes happens when your body doesn't use insulin well. It is the most common type and usually develops in adults over time.",
+        "symptoms": "Common symptoms include urinating a lot (especially at night), extreme thirst, losing weight without trying, blurry vision, and feeling very tired.",
+        "diet": "A diabetic-friendly diet focuses on high-fiber foods like vegetables and whole grains, lean proteins, and low-fat dairy. It is important to avoid sugary drinks.",
+        "food": "A diabetic-friendly diet focuses on high-fiber foods like vegetables and whole grains, lean proteins, and low-fat dairy. It is important to avoid sugary drinks.",
+        "emergency": "If you experience severe confusion, shaking, sweating, or breathlessness, please call emergency services immediately.",
+        "low sugar": "Low blood sugar (hypoglycemia) can cause shaking and dizziness. Treat it immediately with 15 grams of fast-acting carbs, like 4 ounces of fruit juice."
+    };
+
+    function sendMessage() {
+        const inputField = document.getElementById("user-input");
+        const chatBox = document.getElementById("chat-box");
+        let userText = inputField.value.toLowerCase().trim();
+
+        if (userText === "") return;
+
+        // 1. Put the user's message on the screen
+        chatBox.innerHTML += `<div class="msg user">${inputField.value}</div>`;
+        inputField.value = "";
+
+        // 2. Make the bot "think" for half a second, then reply
+        setTimeout(() => {
+            let response = "I'm sorry, I don't have information on that specific topic. Please try asking about 'symptoms', 'diet', 'Type 1', or 'Type 2'.";
+            
+            // 3. Search the knowledge base for a matching keyword
+            for (let keyword in knowledgeBase) {
+                if (userText.includes(keyword)) {
+                    response = knowledgeBase[keyword];
+                    break;
+                }
+            }
+
+            chatBox.innerHTML += `<div class="msg bot">${response}</div>`;
+            
+            // 4. Scroll to the bottom of the chat automatically
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }, 500);
+    }
+
+    // Allow pressing "Enter" on the keyboard to send a message
+    function handleKeyPress(event) {
+        if (event.key === "Enter") {
+            sendMessage();
+        }
+    }
+</script>
+
+</body>
+</html>
